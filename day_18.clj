@@ -18,12 +18,8 @@
 
 (defn trapped? [n state]
   (let [left (contains? state (- n 1))
-        center (contains? state n)
         right (contains? state (+ n 1))]
-    (or (and left center (not right))
-        (and center right (not left))
-        (and left (not center) (not right))
-        (and right (not center) (not left)))))
+    (not= left right)))
 
 (defn next-gen [state]
   (loop [n 0
@@ -35,14 +31,15 @@
                    (conj res n)
                    res)))))
 
-(defn count-40-gens [state]
+(defn count-gens [state max-gen]
   (loop [gen 0
          current-state state
          safe-count 0]
-    (if (= gen 40)
+    (if (= gen max-gen)
         safe-count
         (recur (+ gen 1)
                (next-gen current-state)
                (+ safe-count (- max-len (count current-state)))))))
 
-(count-40-gens init-state)
+(count-gens init-state 40)
+(count-gens init-state 400000)
